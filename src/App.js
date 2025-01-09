@@ -69,8 +69,6 @@ function App() {
     setDropDown(null);
   }
 
-  
-
   // Dropdown and choose status
   const dropDownStatus = (id) => {
     if(dropDown === id){
@@ -127,7 +125,7 @@ function App() {
       
 
        <ul className="task-list">
-  {newSearch.trim() ? ( //search results
+  {newSearch.trim() ? ( 
     searchResults.length > 0 ? ( 
       searchResults.map((task) => (
         <li key={task.id}>
@@ -160,7 +158,7 @@ function App() {
       <p>NOT FOUND</p> 
     )
   ) : (
-    tasks.map((task) => ( // all task
+    tasks.map((task) => (
       <li key={task.id}>
         <span>{task.text}</span>
         <button onClick={() => deleteTask(task.id)}>Delete</button>
@@ -196,5 +194,4 @@ export default App;
 
 
 
-// toán tử 3 ngôi? nếu edit === null thì không thực hiện luôn
 
