@@ -3,7 +3,11 @@ import "./App.css";
 import { v4 as uuidv4 } from "uuid";
 
 function App() {
-  const statusOptions = ["Not Done", "Running", "Done"];
+  const statusOptions = [
+    {id: 0, content: "Not Done"},
+    {id: 1, content: "Running"},
+    {id: 2, content: "Not Done"},
+  ];
   const [tasks, setTasks] = useState([]);
   const [newText, setNewText] = useState("");
   const [editId, setEditId] = useState(null);
@@ -17,7 +21,7 @@ function App() {
  // Add task
   const addTask = () => {
       if(newText.trim() !== ""){
-      const newTaskItem = { id: uuidv4(), text: newText, status: statusOptions[0]}; 
+      const newTaskItem = { id: uuidv4(), text: newText, status: statusOptions[0].content}; 
       setTasks([...tasks, newTaskItem]);
       setNewText("");
       setSearchResults([]);
@@ -38,7 +42,6 @@ function App() {
     }
   }
   
-  
   const saveTask = () => { 
       const updatedTask = tasks.map((task) => {
         if(task.id === editId){
@@ -58,12 +61,9 @@ function App() {
   const setStatusTask = (id, newStatus) => {
     const updatedStatus = tasks.map((task) => {
       if(task.id ===id){
-      
         return {...task, status: newStatus};
       }
-      else {
-        return task;
-      }
+      return task;
     })
     setTasks(updatedStatus);
     setDropDown(null);
@@ -74,116 +74,129 @@ function App() {
     if(dropDown === id){
       setDropDown(null);
     }
-    else{
       setDropDown(id);
-    }
   }
 
   //Search
   const getSearchResult = () => {
-    const searchTask = tasks.filter((task) => task.text.toLowerCase().includes(newSearch.toLowerCase()));
+    const searchTask = tasks.filter((task) => {
+      const a = task.text.toLowerCase();
+      const b = newSearch.toLowerCase();
+      const c = a.includes(b);
+      return c;
+    });
     setSearchResults(searchTask);
   }
 
+  // Get Search Status
   const getSearchStatusResult = () => {
-    const searchTask = tasks.filter((task) => task.status.toLowerCase().includes(newSearch.toLowerCase()));
+    const searchTask = tasks.filter((task) => {
+      const a = task.status.toLowerCase();
+      const b = newSearch.toLowerCase();
+      const c = a.includes(b);
+      return c;
+    });
     setSearchResults(searchTask);
   }
+
+  const renderInput = () => {
+    if(editId === null){
+      return (<div className="input-container">
+        <input
+          type="text"
+          placeholder="Add task..."
+          value={newText}
+          onChange={(e) => setNewText(e.target.value)}
+        />
+        <button onClick={addTask}>Add</button>
+      </div>)
+    }
+    return (<div className="input-container">
+      <input
+        type="text"
+        value={newText}
+        onChange={(e) => setNewText(e.target.value)}
+      />
+      <button onClick={saveTask}>Save</button>
+    </div>)
+  }
+
+  const renderSearch = () => {
+    return (<div className="input-container">
+    <input
+        type="text"
+        placeholder="Search..."
+        value={newSearch}
+        onChange={(e) => setNewSearch(e.target.value)}
+      />
+      <button onClick={getSearchResult}>Search</button>
+      <button onClick={getSearchStatusResult}>Search By Status</button>
+    </div>)
+  }
+
+  const renderTaskList = () => {
+
+    let tasksToRender;
+    if(newSearch.trim()){
+      tasksToRender = searchResults;
+    }
+      tasksToRender = tasks;
+  
+    if (tasksToRender.length === 0) {
+      return <p>NOT FOUND</p>;
+    }
+  
+    return (
+      <ul className="task-list">
+        {tasksToRender.map((task) => {
+          let dropdownMenu = null;
+  
+          if (dropDown === task.id) {
+            dropdownMenu = (
+              <div className="dropdown-menu">
+                {statusOptions.map((statusOption) => (
+                  <button
+                    key={statusOption.id}
+                    onClick={() => setStatusTask(task.id, statusOption.content)}
+                  >
+                    {statusOption.content}
+                  </button>
+                ))}
+              </div>
+            );
+          } else {
+            dropdownMenu = null; 
+          }
+  
+          return (
+            <li key={task.id}>
+              <div className="roh">
+                <span>{task.text}</span>
+              </div>
+              <div className="custom">
+                <button onClick={() => deleteTask(task.id)}>Delete</button>
+                <button onClick={() => editTask(task.id)}>Edit</button>
+                <button onClick={() => dropDownStatus(task.id)}>
+                  {task.status}
+                </button>
+              </div>
+              {dropdownMenu}
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
+  
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>To-Do List</h1>
-        
-        {editId === null  ?(<div className="input-container">
-          <input
-            type="text"
-            placeholder="Add task..."
-            value={newText}
-            onChange={(e) => setNewText(e.target.value)}
-          />
-          <button onClick={addTask}>Add</button>
-        </div>): (<div className="input-container">
-          <input
-            type="text"
-            value={newText}
-            onChange={(e) => setNewText(e.target.value)}
-          />
-          <button onClick={saveTask}>Save</button>
-        </div>)}
-
-        <div className="input-container">
-        <input
-            type="text"
-            placeholder="Search..."
-            value={newSearch}
-            onChange={(e) => setNewSearch(e.target.value)}
-          />
-          <button onClick={getSearchResult}>Search</button>
-          <button onClick={getSearchStatusResult}>Search By Status</button>
-        </div>
-      
-
-       <ul className="task-list">
-  {newSearch.trim() ? ( 
-    searchResults.length > 0 ? ( 
-      searchResults.map((task) => (
-        <li key={task.id}>
-          <div className="roh">
-          <span>{task.text}</span>
-          </div>
-         <div className="custom">
-          <button onClick={() => deleteTask(task.id)}>Delete</button>
-          <button onClick={() => editTask(task.id)}>Edit</button>
-          <button onClick={() => dropDownStatus(task.id)}>
-            {task.status}
-          </button>
-         </div>
-
-          {dropDown === task.id && (
-            <div className="dropdown-menu">
-            {statusOptions.map((statusOption, index) => (
-              <button 
-                key={index} 
-                onClick={() => setStatusTask(task.id, statusOption)}
-              >
-                {statusOption}
-              </button>
-            ))}
-          </div>
-          )}
-        </li>
-      ))
-    ) : (
-      <p>NOT FOUND</p> 
-    )
-  ) : (
-    tasks.map((task) => (
-      <li key={task.id}>
-        <span>{task.text}</span>
-        <button onClick={() => deleteTask(task.id)}>Delete</button>
-        <button onClick={() => editTask(task.id)}>Edit</button>
-        <button onClick={() => dropDownStatus(task.id)}>
-          {task.status}
-        </button>
-
-        {dropDown === task.id && (
-         <div className="dropdown-menu">
-         {statusOptions.map((statusOption, index) => (
-           <button 
-             key={index} 
-             onClick={() => setStatusTask(task.id, statusOption)}
-           >
-             {statusOption}
-           </button>
-         ))}
-       </div>
-        )}
-      </li>
-    ))
-  )}
-</ul>
-
+        <h1>To Do List</h1>
+        {renderInput()}
+        {renderSearch()}
+        {renderTaskList()}
+    
       </header>
     </div>
   );
