@@ -76,14 +76,17 @@ function App() {
       setDropDown(id);
   }
   
+  const renderInputText = () => {
+    return (<input
+    type="text"
+    value={newText}
+    onChange={(e) => setNewText(e.target.value)}
+  />)
+  }
   // add button
   const addButton = () => {
     return (<div className="input-container">
-      <input
-        type="text"
-        value={newText}
-        onChange={(e) => setNewText(e.target.value)}
-      />
+      {renderInputText}
       <button onClick={addTask}>Add</button>
     </div>)
   }
@@ -91,11 +94,7 @@ function App() {
   // save button
   const saveButton = () => {
     return (<div className="input-container">
-      <input
-        type="text"
-        value={newText}
-        onChange={(e) => setNewText(e.target.value)}
-      />
+      {renderInputText}
       <button onClick={saveTask}>Save</button>
     </div>)
   }
