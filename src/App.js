@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import "./App.css";
 import { v4 as uuidv4 } from "uuid";
+import RenderInput from "./components/RenderInput";
+import RenderSearch from "./components/RenderSearch";
+
+
+
+
 
 const statusOptions = [
   {id: 0, content: "No"},
@@ -75,53 +81,38 @@ function App() {
     }
       setDropDown(id);
   }
-  
-  const renderInputText = () => {
-    return (<input
-    type="text"
-    value={newText}
-    onChange={(e) => setNewText(e.target.value)}
-  />)
-  }
-  // add button
-  const addButton = () => {
-    return (<div className="input-container">
-      {renderInputText}
-      <button onClick={addTask}>Add</button>
-    </div>)
-  }
+ // SaveAddButton
+  // const RenderInput = ({newText, setNewText, addTask, saveTask, editId}) => {
+  //   const resultInput = editId === null;
+  //   const handleButtonOnClick = resultInput ? addTask : saveTask;
+  //   const handleButtonText = resultInput ? "Add" : "Save";
+  //   return(
+  //     <div className="input-container">
+  //     <input
+  //     type="text"
+  //     value={newText}
+  //     onChange={(e) => setNewText(e.target.value)}
+  //    />
+  //     <button onClick={handleButtonOnClick}>{handleButtonText}</button>
+  //   </div>
+  //   )
+  // }
 
-  // save button
-  const saveButton = () => {
-    return (<div className="input-container">
-      {renderInputText}
-      <button onClick={saveTask}>Save</button>
-    </div>)
-  }
-
-
-  const renderInput = () => {
-    if(editId === null){
-       return addButton();
-    }
-     return saveButton();
-  }
-
-  const renderSearch = () => {
-    return (
-      <div className="input-container">
-        <input
-          type="text"
-          placeholder="Search by text or status..."
-          value={newSearch}
-          onChange={(e) => setNewSearch(e.target.value)}
-        />
-      </div>
-    );
-  };
+  // const RenderSearch = ({newSearch, setNewSearch}) => {
+  //   return (
+  //     <div className="input-container">
+  //       <input
+  //         type="text"
+  //         placeholder="Search by text or status..."
+  //         value={newSearch}
+  //         onChange={(e) => setNewSearch(e.target.value)}
+  //       />
+  //     </div>
+  //   );
+  // };
   
 
-  const renderTaskList = () => {
+  const RenderTaskList = ({tasks, dropDown, newSearch, setStatusTask, deleteTask, editTask}) => {
     const tasksToRender = tasks.filter((task) => {
       const searchLower = newSearch.toLowerCase();
       return (
@@ -181,9 +172,23 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>To Do List</h1>
-        {renderInput()}
-        {renderSearch()}
-        {renderTaskList()}
+        <RenderInput
+          newText={newText}
+          setNewText={setNewText}
+          editId={editId}
+          addTask={addTask}
+          saveTask={saveTask}/>
+        <RenderSearch 
+          newSearch = {newSearch} 
+          setNewSearch={setNewSearch}/>
+        <RenderTaskList
+          tasks={tasks}
+          dropDown={dropDown}
+          setStatusTask={setStatusTask}
+          deleteTask={deleteTask}
+          editTask={editTask}
+          newSearch={newSearch}
+        />
     
       </header>
     </div>
@@ -191,6 +196,9 @@ function App() {
 }
 
 export default App;
+
+
+
 
 
 
