@@ -20,7 +20,6 @@ function App() {
   const [newText, setNewText] = useState("");
   const [editId, setEditId] = useState(null);
   const [newSearch, setNewSearch] = useState(""); // Search string
-  const [searchResults, setSearchResults] = useState([]); // Search result
   const [dropDown, setDropDown] = useState(null);
   
  // Add task
@@ -29,13 +28,11 @@ function App() {
       const newTaskItem = { id: uuidv4(), text: newText, status: statusOptions[0].content}; 
       setTasks([...tasks, newTaskItem]);
       setNewText("");
-      setSearchResults([]);
       }
   };
   // Delete task
   const deleteTask = (id) => {
     setTasks((prev) =>  prev.filter((task) => task.id !== id)) ;
-    setSearchResults([]);
   };
 
  // Start editing task
@@ -59,7 +56,6 @@ function App() {
       setTasks(updatedTask);
       setEditId(null);
       setNewText("");
-      setSearchResults([]);
   }
 
   //Set status task
@@ -81,36 +77,6 @@ function App() {
     }
       setDropDown(id);
   }
- // SaveAddButton
-  // const RenderInput = ({newText, setNewText, addTask, saveTask, editId}) => {
-  //   const resultInput = editId === null;
-  //   const handleButtonOnClick = resultInput ? addTask : saveTask;
-  //   const handleButtonText = resultInput ? "Add" : "Save";
-  //   return(
-  //     <div className="input-container">
-  //     <input
-  //     type="text"
-  //     value={newText}
-  //     onChange={(e) => setNewText(e.target.value)}
-  //    />
-  //     <button onClick={handleButtonOnClick}>{handleButtonText}</button>
-  //   </div>
-  //   )
-  // }
-
-  // const RenderSearch = ({newSearch, setNewSearch}) => {
-  //   return (
-  //     <div className="input-container">
-  //       <input
-  //         type="text"
-  //         placeholder="Search by text or status..."
-  //         value={newSearch}
-  //         onChange={(e) => setNewSearch(e.target.value)}
-  //       />
-  //     </div>
-  //   );
-  // };
-  
 
   const RenderTaskList = ({tasks, dropDown, newSearch, setStatusTask, deleteTask, editTask}) => {
     const tasksToRender = tasks.filter((task) => {
