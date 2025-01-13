@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import './App.css';
 import { v4 as uuidv4 } from 'uuid';
-import Input from './components/Input';
 import Search from './components/Search';
 import TaskList from './components/TaskList';
 import statusOptions from './constants/StatusOptions';
+import InputText from './components/InputText';
+
 function App() {
   const [tasks, setTasks] = useState([]);
   const [newText, setNewText] = useState('');
   const [editId, setEditId] = useState(null);
   const [newSearch, setNewSearch] = useState(''); // Search string
-  const [dropDown, setDropDown] = useState(null);
+
   // Add task
   const addTask = () => {
     if (newText.trim() !== '') {
@@ -61,19 +62,13 @@ function App() {
       return task;
     });
     setTasks(updatedStatus);
-    setDropDown(null);
-  };
-
-  // Dropdown and choose status
-  const dropDownStatus = (id) => {
-    setDropDown(id);
   };
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>To Do List</h1>
-        <Input
+        <InputText
           newText={newText}
           setNewText={setNewText}
           editId={editId}
@@ -83,12 +78,10 @@ function App() {
         <Search newSearch={newSearch} setNewSearch={setNewSearch} />
         <TaskList
           tasks={tasks}
-          dropDown={dropDown}
           setStatusTask={setStatusTask}
           deleteTask={deleteTask}
           editTask={editTask}
           newSearch={newSearch}
-          dropDownStatus={dropDownStatus}
         />
       </header>
     </div>
