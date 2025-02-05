@@ -9,6 +9,7 @@ export default function Search({ newSearch, setNewSearch }) {
         placeholder="Search by text or status..."
         value={newSearch}
         onChange={(e) => setNewSearch(e.target.value)}
+        className="search-input"
       />
     </div>
   );

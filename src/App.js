@@ -20,7 +20,7 @@ function App() {
         text: newText,
         status: statusOptions[0].content,
       };
-      setTasks([...tasks, newTaskItem]);
+      setTasks((prevTasks) => [...prevTasks, newTaskItem]);
       setNewText('');
     }
   };
@@ -53,7 +53,7 @@ function App() {
     setNewText('');
   };
 
-  //Set status task
+  // Set status task
   const setStatusTask = (id, newStatus) => {
     const updatedStatus = tasks.map((task) => {
       if (task.id === id) {

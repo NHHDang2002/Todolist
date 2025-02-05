@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import statusOptions from '../constants/StatusOptions';
 import { Button, Dropdown, Space, List } from 'antd';
 import { DeleteFilled, EditFilled, DownOutlined } from '@ant-design/icons';
 
-export default function TaskList({ tasks, newSearch, setStatusTask, deleteTask, editTask }) {
+const TaskList = React.memo(({ tasks, newSearch, setStatusTask, deleteTask, editTask }) => {
   // Lọc danh sách task dựa trên tìm kiếm
-  const tasksToRender = tasks.filter((task) => {
-    const searchLower = newSearch.toLowerCase();
-    return (
-      task.text.toLowerCase().includes(searchLower) ||
-      task.status.toLowerCase().includes(searchLower)
-    );
-  });
+  const tasksToRender = useMemo(() => {
+    return tasks.filter((task) => {
+      const searchLower = newSearch.toLowerCase();
+      return (
+        task.text.toLowerCase().includes(searchLower) ||
+        task.status.toLowerCase().includes(searchLower)
+      );
+    });
+  }, [tasks, newSearch]);
 
   if (tasksToRender.length === 0) {
     return <p>NOT FOUND</p>;
@@ -56,13 +58,12 @@ export default function TaskList({ tasks, newSearch, setStatusTask, deleteTask, 
               dropdownMenu, // Dropdown menu cho status
             ]}
           >
-            <List.Item.Meta
-              title={task.text}
-              // description={`Task ID: ${task.id}`}
-            />
+            <List.Item.Meta title={task.text} description={`Task ID: ${task.id}`} />
           </List.Item>
         );
       }}
     />
   );
-}
+});
+
+export default TaskList;
